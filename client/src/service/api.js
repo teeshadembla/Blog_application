@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_NOTIF_MESSAGES, SERVICE_URLS } from '../constants/config.js';
+import { getAccessToken } from '../utils/commonUtils.js';
 const API_URL = 'http://localhost:8000';
 
 // we will be using axios interceptor
@@ -7,7 +8,7 @@ const axiosInstance = axios.create({
     baseURL: API_URL,
     timeout: 10000,
     headers: {
-        "content-type": "application/json"
+        "Accept": "application/json, multipart/form-data"
     }
 })
 
@@ -84,6 +85,9 @@ for(const [key, value] of Object.entries(SERVICE_URLS)){
             url: value.url,
             data: value.method === 'DELETE' ? '' : body,
             responseType: value.responseType,
+            headers: {
+                authorization: getAccessToken()
+            },
             onUploadProgress: function (progressEvent){
                 if(showUploadProgress){
                     let percentageCompleted = Math.round((progressEvent.loaded * 100)/progressEvent.total )

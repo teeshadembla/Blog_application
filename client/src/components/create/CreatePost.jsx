@@ -1,5 +1,5 @@
 import {Box, styled, FormControl, InputBase, Button, TextareaAutosize} from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { categories } from '../../constants/data';
@@ -52,6 +52,7 @@ const CreatePost = () =>{
     const [file, setFile] = useState("");
     const {account} = useContext(DataContext);
     const location = useLocation();
+    const navigate = useNavigate();
     useEffect(()=>{
         const getImg = async() =>{
             if(file){
@@ -60,16 +61,26 @@ const CreatePost = () =>{
                 data.append("file",file);
 
                 //API Call for image uploading
-                const response = await API.uploadFile(data);
-                post.picture = response.data;
+                try{
+                    const response = await API.uploadFile(data);
+                    setPost((post) => ({ ...(post), picture: response.data }));
+                }catch(err){
+                    console.log(err,"File hasn't even been able to be uploaded")
+                }
             }
         }
         getImg();
         post.categories = location.search?.split("=")[1] || 'All';
         post.username = account.username;
     }, [file])
+
     const handleChange = (e) =>{
         console.log({...post, [e.target.name]: e.target.value});
+    }
+
+    const savePost = async() =>{
+        await API.createPost(post);
+        navigate('/');
     }
 
     return(
@@ -78,15 +89,20 @@ const CreatePost = () =>{
             <Image src={url} alt='banner'/>
         </Container>
 
-        <StyledFormControl>
-            <label style={{marginLeft: "80px"}} htmlFor='fileInput'>
+        <StyledFormControl encType="multipart/form-data">
+            <label style={{marginLeft: "80px"}} type='file' htmlFor='fileInput'>
                 <AddCircleIcon fontSize='large' color='action'/>
             </label>
 
-            <input type='file' id='fileInput' style={{display: 'none'}} onChange={(e) => setFile(e.target.files[0])}></input>
+            <input type='file' name='file' id='fileInput' style={{display: 'none'}} onChange={(e) => {
+                console.log("Selected file:", e.target.files[0]);
+                setFile(e.target.files[0])}
+                }>
+
+                </input>
             
             <InputTextField placeholder='Title' name='title' onChange={(e)=>handleChange(e)}/>
-            <Button variant='contained' style={{marginRight: "80px"}}>Publish</Button>
+            <Button variant='contained' style={{marginRight: "80px"}} onClick={()=>savePost()}>Publish</Button>
 
         </StyledFormControl>
 
