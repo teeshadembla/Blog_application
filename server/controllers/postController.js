@@ -36,3 +36,33 @@ export const getPost = async(req,res) =>{
         return res.status(500).json({msg: err.message});
     }
 }
+
+export const updatePost = async(req,res) =>{
+    try{
+        const post = await Post.findById(req.params.id);
+        if(!post){
+            return res.status(404).json({msg : 'Post not found'});
+        }
+
+        await Post.findByIdAndUpdate(req.params.id, {$set: req.body}) //$set is used to replace an object within an array
+        
+        return res.status(200).json({msg: 'post updated successfully'});
+    
+    }catch(err){
+        return res.status(500).json({msg : err.message});
+    }
+}
+
+export const deletePost = async(req,res) => {
+    try{
+        const post = await Post.findById(req.params.id);
+        if(!post){
+            return res.status(404).json({msg : 'Post not found'});
+        }
+        await Post.findByIdAndDelete(req.params.id);
+
+        return res.status(200).json({msg: 'post deleted'});
+    }catch(err){
+        return res.status(500).json({msg: "Some error occurred while trying to delete. Try again"});
+    }
+}

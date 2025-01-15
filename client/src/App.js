@@ -8,6 +8,8 @@ import Home from './components/Home/Home';
 import Header from './components/Header/Header'
 import CreatePost from './components/create/CreatePost';
 import DetailView from './components/details/DetailView';
+import UploadPost from './components/create/UpdatePost';
+import UpdatePost from './components/create/UpdatePost';
 
 const PrivateRoute = ({isAuthenticatedPriv, ...props}) => {
   return isAuthenticatedPriv ?
@@ -38,6 +40,10 @@ function App() {
 
             <Route path='/details/:id' element={<PrivateRoute isAuthenticatedPriv={isAuthenticated}/>}>
               <Route path='/details/:id' element={<DetailView />}/>
+            </Route>
+
+            <Route path='/update/:id' element={<PrivateRoute isAuthenticatedPriv={isAuthenticated}/>}>
+              <Route path='/update/:id' element={<UpdatePost />}/>
             </Route>
 
            </Routes>

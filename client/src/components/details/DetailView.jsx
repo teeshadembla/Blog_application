@@ -1,6 +1,6 @@
 import {Box, Typography, styled} from '@mui/material';
 import {Edit, Delete} from '@mui/icons-material';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import {API} from '../../service/api';
 import {DataContext} from '../../context/DataProvider'
@@ -33,6 +33,7 @@ const DeleteIcon = styled(Delete)`
     padding: 5px;
     border: 1px solid #878787;
     border-radius: 10px;
+    cursor: pointer;
 `
 
 const Author = styled(Box)`
@@ -49,7 +50,8 @@ const DetailView = () => {
     const {id} = useParams();
     const {account} = useContext(DataContext);
     const url = post.picture ? post.picture :'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
-    
+    const navigate = useNavigate();
+
     useEffect(()=>{
         const fetchData = async() =>{
             let response = await API.getPostById(id);
@@ -60,6 +62,13 @@ const DetailView = () => {
         }
         fetchData();
     },[id])
+
+    const deleteBlog = async() =>{
+        let response = await API.deletePost(post._id);
+        if(response.isSuccess){
+            navigate('/');
+        }
+    }
     
     return (
         <Container>
@@ -69,8 +78,8 @@ const DetailView = () => {
                 {
                     account.username === post.username && 
                     <>
-                        <EditIcon color='primary'/>
-                        <DeleteIcon color='error'/>
+                        <Link to={`/update/${post._id}`}><EditIcon color='primary'/></Link>
+                        <DeleteIcon onClick={()=>deleteBlog()} color='error'/>
                     </> 
                 }
                 

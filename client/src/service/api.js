@@ -88,7 +88,7 @@ for(const [key, value] of Object.entries(SERVICE_URLS)){
         return axiosInstance({
             method: value.method,
             url: value.url,
-            data: value.method === 'DELETE' ? '' : body,
+            data: value.method === 'DELETE' ? '' : body,//delete method mein body nahi bhejte hai apan
             responseType: value.responseType,
             headers: {
                 authorization: getAccessToken()
