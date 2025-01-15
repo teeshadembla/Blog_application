@@ -11,8 +11,7 @@ const PostSchema = new mongoose.Schema({
         required: true
     },
     picture: {
-        type: String,
-        required: true
+        type: String
     }, 
     username: {
         type: String,
@@ -27,6 +26,6 @@ const PostSchema = new mongoose.Schema({
     }
 });
 
-const post = mongoose.model("Post", PostSchema);
+const Post = mongoose.model("Post", PostSchema);
 
-export default post;
+export default Post;

@@ -7,6 +7,7 @@ import Login from './components/accounts/Login';
 import Home from './components/Home/Home';
 import Header from './components/Header/Header'
 import CreatePost from './components/create/CreatePost';
+import DetailView from './components/details/DetailView';
 
 const PrivateRoute = ({isAuthenticatedPriv, ...props}) => {
   return isAuthenticatedPriv ?
@@ -33,6 +34,10 @@ function App() {
 
             <Route path='/create' element={<PrivateRoute isAuthenticatedPriv={isAuthenticated}/>}>
               <Route path='/create' element={<CreatePost/>}/>
+            </Route>
+
+            <Route path='/details/:id' element={<PrivateRoute isAuthenticatedPriv={isAuthenticated}/>}>
+              <Route path='/details/:id' element={<DetailView />}/>
             </Route>
 
            </Routes>

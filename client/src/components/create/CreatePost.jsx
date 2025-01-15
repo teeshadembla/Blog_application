@@ -63,7 +63,7 @@ const CreatePost = () =>{
                 //API Call for image uploading
                 try{
                     const response = await API.uploadFile(data);
-                    setPost((post) => ({ ...(post), picture: response.data }));
+                    post.picture = response.data;
                 }catch(err){
                     console.log(err,"File hasn't even been able to be uploaded")
                 }
@@ -75,12 +75,15 @@ const CreatePost = () =>{
     }, [file])
 
     const handleChange = (e) =>{
-        console.log({...post, [e.target.name]: e.target.value});
+        setPost({...post, [e.target.name]: e.target.value});
+        console.log(post);
     }
 
     const savePost = async() =>{
-        await API.createPost(post);
-        navigate('/');
+        let response = await API.createPost(post);
+        if(response.isSuccess){
+            navigate('/');
+        }
     }
 
     return(
